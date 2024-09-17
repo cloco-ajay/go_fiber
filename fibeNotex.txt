@@ -1,0 +1,2 @@
+1. used nodemon for auto reload when chnages done. and run this command in terminal nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run main.go
+2. 
