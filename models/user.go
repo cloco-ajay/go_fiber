@@ -9,12 +9,13 @@ import (
 )
 
 type User struct {
-	ID        uint       `json:"id" gorm:"primaryKey; autoIncrement"`
-	Name      string     `json:"name"`
-	Email     *string    `json:"email" gorm:"unique"` //allowing null values
-	Password  string     `json:"password"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt *time.Time `json:"updated_at"`
+	ID              uint       `json:"id" gorm:"primaryKey; autoIncrement"`
+	Name            string     `json:"name"`
+	Email           *string    `json:"email" gorm:"unique"` //allowing null values
+	Password        string     `json:"password"`
+	EmailVerifiedAt *time.Time `json:"email_verified_at"`
+	CreatedAt       time.Time  `json:"created_at"`
+	UpdatedAt       *time.Time `json:"updated_at"`
 }
 
 func (u User) Validate(create bool) error {

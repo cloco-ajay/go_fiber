@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"fmt"
-	"sales-api/response"
 	"sales-api/repository"
+	"sales-api/response"
 	"sales-api/statusCode"
 	"sales-api/usecase"
 
@@ -36,4 +36,14 @@ func (h *LoginHandler) Login(c *fiber.Ctx) error {
 		return response.ErrorResponse(c, statusCode.InternalServerError, err.Error())
 	}
 	return response.SuccessResponseWithData(c, statusCode.Ok, "Logged In successfully.", data)
+}
+
+func (h *LoginHandler) VerifyEmail(c *fiber.Ctx) error {
+	encryptedInfo := c.Params("encryptedInfo")
+	err := h.useCase.VerifyEmail(encryptedInfo)
+	if err != nil {
+		return response.ErrorResponse(c, statusCode.InternalServerError, err.Error())
+	}
+	return response.SuccessResponse(c, statusCode.Ok, "Email Verified Successfully")
+
 }

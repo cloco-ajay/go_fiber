@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"sales-api/models"
-	"sales-api/response"
 	"sales-api/repository"
+	"sales-api/response"
 	"sales-api/statusCode"
 	"sales-api/usecase"
 	"strconv"

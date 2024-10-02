@@ -1,6 +1,10 @@
 package repository
 
 import (
+	"encoding/base64"
+	"fmt"
+	"sales-api/constant"
+	"sales-api/emailProvider"
 	"sales-api/models"
 	"sales-api/utils"
 
@@ -42,9 +46,26 @@ func (r *userRepository) CreateUser(user models.User) (models.User, error) {
 		return user, hashError
 	}
 	user.Password = hashedPassword
-
 	err := r.db.Create(&user).Error
+	if err == nil {
+		randomString, gErr := utils.GenerateRandomString(64)
+		if gErr != nil {
+			return user, gErr
+		}
+		toEncode := fmt.Sprint(string(*user.Email), "-", randomString, "-", user.ID)
+		base64Encode := base64.StdEncoding.EncodeToString([]byte(toEncode))
+		verificationUrl := fmt.Sprint(constant.GetBaseURL(), "/", "verify-email/", base64Encode)
 
+		data := map[string]interface{}{
+			"Name": user.Name,
+			"Url":  verificationUrl,
+		}
+		err := emailProvider.SendEmail("User Registration Successful", []string{*user.Email}, "UserRegistration.html", data)
+		if err != nil {
+			r.DeleteUser(user.ID)
+			return user, err
+		}
+	}
 	return user, err
 }
 
