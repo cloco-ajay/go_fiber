@@ -11,7 +11,12 @@ func FreeRoutes(app *fiber.App, db *gorm.DB) {
 
 	// login handler and routes
 	loginHandlers := handlers.NewLoginHandler(db)
+	userHandlers := handlers.NewUserHandler(db)
+
 	app.Post("/login", loginHandlers.Login)
 	app.Get("/verify-email/:encryptedInfo", loginHandlers.VerifyEmail).Name("VerifyEmail")
+
+	// user handlers and routes
+	app.Post("/users/create", userHandlers.CreateUser)
 
 }
