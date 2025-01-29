@@ -5,6 +5,9 @@ import (
 	"sales-api/utils"
 	"gorm.io/gorm"
 	"sales-api/service/emailProvider"
+	"fmt"
+	"encoding/base64"
+	"sales-api/constant"
 	
 )
 
@@ -61,20 +64,19 @@ func (r *userRepository) CreateUser(user models.User) (models.User, error) {
 	// }
 
 	if err == nil {
-		// randomString, gErr := utils.GenerateRandomString(64)
-		// if gErr != nil {
-		// 	return user, gErr
-		// }
-		// toEncode := fmt.Sprint(string(*user.Email), "-", randomString, "-", user.ID)
-		// base64Encode := base64.StdEncoding.EncodeToString([]byte(toEncode))
-		// verificationUrl := fmt.Sprint(constant.GetBaseURL(), "/", "verify-email/", base64Encode)
+		randomString, gErr := utils.GenerateRandomString(64)
+		if gErr != nil {
+			return user, gErr
+		}
+		toEncode := fmt.Sprint(string(*user.Email), "-", randomString, "-", user.ID)
+		base64Encode := base64.StdEncoding.EncodeToString([]byte(toEncode))
+		verificationUrl := fmt.Sprint(constant.GetBaseURL(), "/", "verify-email/", base64Encode)
 
-		// data := map[string]interface{}{
-		// 	"Name": user.Name,
-		// 	"Url":  verificationUrl,
-		// }
-		err := emailProvider.SendEmail("User Registration Successful", []string{*user.Email}, "<p>shgdhf</p>")
-		// err := service.sendEmail("User Registration Successful", []string{*user.Email}, "UserRegistration.html", data)
+		data := map[string]interface{}{
+			"Name": user.Name,
+			"Url":  verificationUrl,
+		}
+		err := emailProvider.SendEmail("User Registration Successful", []string{*user.Email}, "emailTemplates/UserRegistration.html", data)
 		if err != nil {
 			r.DeleteUser(user.ID)
 			return user, err
