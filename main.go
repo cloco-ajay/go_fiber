@@ -6,7 +6,6 @@ import (
 	"sales-api/database"
 	"sales-api/middleware"
 	"sales-api/routes"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -22,6 +21,9 @@ func main() {
 	if !ok {
 		fmt.Println("Not type gorm db")
 	}
+	// handling cors
+	config.CorsPolicy(app)
+
 	// handling auto migration of the models/Schema
 	database.AutoMigration(db)
 
