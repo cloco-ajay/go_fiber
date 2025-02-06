@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  # Go Service
+  go:
+    container_name: go_fiber
+    build:
+      context: .
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - 7000:3000
+    depends_on:
+      - database
+
+  # Database Service
+  database:
+    container_name: go_fiber_database
+    image: mysql:5.7
+    ports:
+      - 3359:3306
+    environment:
+      - MYSQL_DATABASE=${DBNAME}
+      - MYSQL_PASSWORD=${DBPASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DBROOTPASSWORD}
+    volumes:
+      - db-go-data:/var/lib/mysql/
+
+volumes:
+  db-go-data: ~
+
+networks:
+  test-go:
