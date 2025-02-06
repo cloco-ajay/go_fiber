@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Expose the port your app runs on
-EXPOSE 7000
+# EXPOSE 7000
 
 # Command to run the application
 CMD ["go", "run", "main.go"]
